@@ -15,7 +15,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 
-const val KEY = "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
+const val KEY =
+    "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
 
 class MainActivity : AppCompatActivity() {
 
@@ -29,10 +30,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION))
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.ACCESS_FINE_LOCATION))
             ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
-        else
-        {
+        else {
             buildLocationRequest()
             buildLocationCallBack()
 
@@ -48,25 +48,43 @@ class MainActivity : AppCompatActivity() {
 //                fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
 //            })
 
-            if(ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED ||
-                    ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED )
-                {
-                    ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), REQUEST_CODE)
-                }
-            fusedLocationProviderClient.requestLocationUpdates(locationRequest, locationCallback, Looper.myLooper())
+            if (ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.ACCESS_FINE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED ||
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    android.Manifest.permission.ACCESS_COARSE_LOCATION
+                ) != PackageManager.PERMISSION_GRANTED
+            ) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_CODE
+                )
+            }
+            fusedLocationProviderClient.requestLocationUpdates(
+                locationRequest,
+                locationCallback,
+                Looper.myLooper()
+            )
         }
 
     }
 
     private fun buildLocationCallBack() {
-        locationCallback = object :LocationCallback(){
+        locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(p0: LocationResult?) {
-                var location =  p0!!.locations.get(p0!!.locations.size-1)
-                Log.d("locationTAG", "latitude : " + location.latitude.toString() + " longitude : " + location.longitude.toString())
+                var location = p0!!.locations.get(p0!!.locations.size - 1)
+                Log.d(
+                    "locationTAG",
+                    "latitude : " + location.latitude.toString() + " longitude : " + location.longitude.toString()
+                )
 
                 val gCoder = Geocoder(this@MainActivity, Locale.getDefault())
-                val addr: List<Address> = gCoder.getFromLocation(location.latitude, location.longitude, 1)
+                val addr: List<Address> =
+                    gCoder.getFromLocation(location.latitude, location.longitude, 1)
                 val a: Address = addr[0]
                 myLocation.setText(a.adminArea.toString() + " " + a.locality + " " + a.thoroughfare)
             }
@@ -92,12 +110,10 @@ class MainActivity : AppCompatActivity() {
         grantResults: IntArray
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when(requestCode)
-        {
-            REQUEST_CODE->{
-                if(grantResults.size > 0)
-                {
-                    if(grantResults[0] == PackageManager.PERMISSION_GRANTED)
+        when (requestCode) {
+            REQUEST_CODE -> {
+                if (grantResults.size > 0) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                         Toast.makeText(this, "Permisson granted", Toast.LENGTH_SHORT)
                             .show()
                     else

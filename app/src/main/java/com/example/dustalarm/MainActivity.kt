@@ -130,7 +130,7 @@ class MainActivity : AppCompatActivity() {
             pm25.setText(pm10pm25.second)
         } catch (e:Exception)
         {
-            
+
         }
     }
 

@@ -7,6 +7,20 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/mLocation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="dfsd!"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.264">
+
+    </TextView>
+
+    <TextView
         android:id="@+id/pm10"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -27,5 +41,13 @@
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.415" />
+
+    <Button
+        android:id="@+id/btn1"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="업데이트"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

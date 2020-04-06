@@ -1,5 +1,6 @@
 package com.example.dustalarm
 
+import android.util.Log
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.lang.Exception
@@ -45,6 +46,7 @@ class LocationConvertor {
                     stationName
                 }
             }
+
         val result: Future<String> = service.submit(getLocationCall)
         return result.get()
     }

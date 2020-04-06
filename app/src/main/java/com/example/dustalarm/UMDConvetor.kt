@@ -22,7 +22,6 @@ class UMDConvetor {
     }
     fun toTmXTmY(umd: String) : Pair<String, String>
     {
-        Log.d("뭐야", "뭐야")
         val umdCall: Callable<Pair<String, String>> =
             Callable {
                 var tmX = ""

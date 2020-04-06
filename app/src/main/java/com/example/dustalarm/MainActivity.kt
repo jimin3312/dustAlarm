@@ -15,6 +15,7 @@ import com.google.android.gms.location.*
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.stream.Stream
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        startService(Intent(this, PushService::class.java))
+//        startService(Intent(this, PushService::class.java))
 
     }
 
@@ -89,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(p0: LocationResult?) {
-                var location = p0!!.locations.get(p0!!.locations.size - 1)
+                val location = p0!!.locations.get(p0.locations.size - 1)
                 Log.d(
                     "locationTAG",
                     "latitude : " + location.latitude.toString() + " longitude : " + location.longitude.toString()
@@ -104,21 +105,23 @@ class MainActivity : AppCompatActivity() {
                 var umd: String
                 var xy: Pair<String, String>
                 var stationName: String
+                var pm: Pair<String, String>
 
                 if(address.adminArea.equals("서울특별시"))
                 {
-                    stationName = address.subLocality
+                    pm = DustAPI(address.subLocality).recievePm10Pm25()
                 }else
                 {
-                    umd = address.thoroughfare
-                    xy = UMDConvetor(service).toTmXTmY(umd)
-                    stationName = LocationConvertor(service).toStationName(xy)
+                    pm = DustAPI(address.thoroughfare).recieveTMLocation()
+                        .recieveStationName()
+                        .recievePm10Pm25()
                 }
 
-                val pm = StationConverter(service).toPm10Pm25(stationName)
                 pm10.setText(pm.first)
                 pm25.setText(pm.second)
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+
+
             }
         }
     }

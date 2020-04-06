@@ -114,7 +114,6 @@ class MainActivity : AppCompatActivity() {
                     xy = UMDConvetor(service).toTmXTmY(umd)
                     stationName = LocationConvertor(service).toStationName(xy)
                 }
-
                 val pm = StationConverter(service).toPm10Pm25(stationName)
                 pm10.setText(pm.first)
                 pm25.setText(pm.second)

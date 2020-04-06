@@ -15,7 +15,6 @@ class LocationConvertor {
     val service: ExecutorService
     lateinit var bufferedReader: BufferedReader
     lateinit var connection: HttpURLConnection
-    var stationName :String = ""
     constructor(service: ExecutorService) {
         this.service = service
     }
@@ -39,10 +38,9 @@ class LocationConvertor {
                     var jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
                     bufferedReader.close()
                     connection.disconnect()
-                    stationName = jsonObject.getString("stationName")
-                    stationName
+                    jsonObject.getString("stationName")
                 } catch (e: Exception) {
-                    stationName
+                    "error2"+e.toString()
                 }
             }
         val result: Future<String> = service.submit(getLocationCall)

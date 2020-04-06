@@ -25,8 +25,6 @@ class UMDConvetor {
         Log.d("뭐야", "뭐야")
         val umdCall: Callable<Pair<String, String>> =
             Callable {
-                var tmX = ""
-                var tmY = ""
                 var umdName = umd
                 try {
                     var mURL = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?"
@@ -39,14 +37,11 @@ class UMDConvetor {
 
                     val line = bufferedReader.readLine()
                     val jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
-                    tmX = jsonObject.getString("tmX")
-                    tmY = jsonObject.getString("tmY")
-
                     bufferedReader.close()
                     connection.disconnect()
-                    Pair(tmX, tmY)
+                    Pair(jsonObject.getString("tmX"), jsonObject.getString("tmY"))
                 } catch (e: Exception) {
-                    Pair(tmX, tmY)
+                    Pair("error1", e.toString())
                 }
             }
 

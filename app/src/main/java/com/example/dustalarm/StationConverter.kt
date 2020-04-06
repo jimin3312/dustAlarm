@@ -25,8 +25,6 @@ class StationConverter{
     {
         val stationCall: Callable<Pair<String, String>> =
             Callable<Pair<String, String>> {
-                var pm10 = ""
-                var pm25 = ""
                 try {
                     var mURL =
                         "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?"
@@ -38,13 +36,11 @@ class StationConverter{
 
                     var line = bufferedReader.readLine()
                     var jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
-                    pm10 = jsonObject.getString("pm10Value")
-                    pm25 = jsonObject.getString("pm25Value")
                     bufferedReader.close()
                     connection.disconnect()
-                    Pair(pm10, pm25)
+                    Pair(jsonObject.getString("pm10Value"), jsonObject.getString("pm25Value"))
                 } catch (e: Exception) {
-                    Pair(pm10, pm25)
+                    Pair("error3", e.toString())
                 }
             }
         val future: Future<Pair<String, String>> = service.submit(stationCall)

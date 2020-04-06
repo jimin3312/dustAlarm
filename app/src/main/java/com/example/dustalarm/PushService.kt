@@ -23,8 +23,8 @@ class PushService : Service(){
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
 
-//        createNotificationChannel()
-//        pushNotification()
+        createNotificationChannel()
+        pushNotification()
 
         return START_STICKY
     }

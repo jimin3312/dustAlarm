@@ -15,6 +15,7 @@ import com.google.android.gms.location.*
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.stream.Stream
 
 class MainActivity : AppCompatActivity() {
 
@@ -81,7 +82,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-        startService(Intent(this, PushService::class.java))
+//        startService(Intent(this, PushService::class.java))
 
     }
 
@@ -89,35 +90,33 @@ class MainActivity : AppCompatActivity() {
         locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(p0: LocationResult?) {
-                var location = p0!!.locations.get(p0!!.locations.size - 1)
-                Log.d(
-                    "locationTAG",
-                    "latitude : " + location.latitude.toString() + " longitude : " + location.longitude.toString()
-                )
+                val location = p0!!.locations.get(p0.locations.size - 1)
 
                 val gCoder = Geocoder(this@MainActivity, Locale.getDefault())
                 val addr: List<Address> =
                     gCoder.getFromLocation(location.latitude, location.longitude, 1)
                 val address: Address = addr[0]
-                mLocation.setText(address.adminArea + " " + address.countryName + " " + address.thoroughfare + address.featureName + address.locale + address.subLocality)
+                mLocation.setText(address.adminArea + " "+ address.subLocality+ " " + address.thoroughfare)
 
-                var umd: String
-                var xy: Pair<String, String>
-                var stationName: String
+                var pm: Pair<String, String>
+                 object : Thread(){
+                    override fun run() {
+                        super.run()
+                        pm = DustAPI(address.thoroughfare).recieveTMLocation()
+                            .recieveStationName()
+                            .recievePm10Pm25()
+                        pm10.post{
+                            pm10.setText(pm.first)
+                        }
+                        pm25.post{
+                            pm25.setText(pm.second)
+                        }
+                    }
+                }.start()
 
-                if(address.adminArea.equals("서울특별시"))
-                {
-                    stationName = address.subLocality
-                }else
-                {
-                    umd = address.thoroughfare
-                    xy = UMDConvetor(service).toTmXTmY(umd)
-                    stationName = LocationConvertor(service).toStationName(xy)
-                }
-                val pm = StationConverter(service).toPm10Pm25(stationName)
-                pm10.setText(pm.first)
-                pm25.setText(pm.second)
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+
+
             }
         }
     }

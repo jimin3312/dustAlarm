@@ -80,7 +80,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         DustNotiAlarm(this).register()
-
     }
 
     private fun buildLocationCallBack() {

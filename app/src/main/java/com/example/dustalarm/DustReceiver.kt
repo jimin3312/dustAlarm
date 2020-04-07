@@ -17,8 +17,10 @@ class DustReceiver : BroadcastReceiver() {
 
     lateinit var context: Context
 
-    override fun onReceive(context: Context, p1: Intent?) {
+    override fun onReceive(context: Context, intent: Intent?) {
         this.context = context
+        if(intent!!.action == "android.permission.RECEIVE_BOOT_COMPLETED")
+            DustNotiAlarm(context).register()
         createNotificationChannel()
         pushNotification()
     }

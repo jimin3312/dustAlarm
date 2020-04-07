@@ -17,14 +17,15 @@ class DustNotiAlarm {
 
     fun register() {
         val intent: Intent = Intent(context, DustReceiver::class.java)
-
+        intent.action = "android.intent.action.Main"
         val sender: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
 
         val calendar: Calendar = Calendar.getInstance().apply {
             timeInMillis = System.currentTimeMillis()
-            set(Calendar.MINUTE, 55)
+            set(Calendar.HOUR_OF_DAY, 10)
+//            set(Calendar.MINUTE, 3)
         }
         //알람 예약
-        alarmManager.setInexactRepeating(AlarmManager.RTC, calendar.timeInMillis, 1000 * 60, sender)
+        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, sender)
     }
 }

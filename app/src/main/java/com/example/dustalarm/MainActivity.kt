@@ -1,11 +1,9 @@
 package com.example.dustalarm
 
-import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
-import android.util.Log
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.Looper
 import android.widget.Toast
@@ -15,7 +13,6 @@ import com.google.android.gms.location.*
 import java.util.*
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
-import java.util.stream.Stream
 
 class MainActivity : AppCompatActivity() {
 
@@ -82,7 +79,7 @@ class MainActivity : AppCompatActivity() {
             )
         }
 
-//        startService(Intent(this, PushService::class.java))
+        DustNotiAlarm(this).register()
 
     }
 
@@ -115,8 +112,6 @@ class MainActivity : AppCompatActivity() {
                 }.start()
 
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
-
-
             }
         }
     }

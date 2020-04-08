@@ -13,7 +13,6 @@ import android.os.Looper
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.google.android.gms.location.*
-import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
 class DustReceiver : BroadcastReceiver() {
@@ -24,18 +23,21 @@ class DustReceiver : BroadcastReceiver() {
     lateinit var locationCallback: LocationCallback
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
-
     lateinit var context: Context
 
     override fun onReceive(context: Context, intent: Intent?) {
         this.context = context
         if(intent!!.action == "android.permission.RECEIVE_BOOT_COMPLETED")
-            DustNotiAlarm(context).register()
+            DustNotiAlarm(context).regist()
 
         buildLocationCallBack()
         buildLocationRequest()
-        createNotificationChannel()
-        pushNotification()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
+        fusedLocationProviderClient.requestLocationUpdates(
+            locationRequest,
+            locationCallback,
+            Looper.myLooper()
+        )
     }
 
     private fun createNotificationChannel() {
@@ -53,13 +55,6 @@ class DustReceiver : BroadcastReceiver() {
     }
 
     private fun pushNotification() {
-
-        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
 
         val intent = Intent(context, MainActivity::class.java).apply {
             flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -95,6 +90,9 @@ class DustReceiver : BroadcastReceiver() {
                 pm = DustAPI(address.thoroughfare).recieveTMLocation()
                     .recieveStationName()
                     .recievePm10Pm25()
+
+                createNotificationChannel()
+                pushNotification()
 
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             }

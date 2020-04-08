@@ -1,18 +1,13 @@
 package com.example.dustalarm
 
-import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
 import android.os.Bundle
 import kotlinx.android.synthetic.main.activity_main.*
 import android.os.Looper
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
 import java.util.*
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 class MainActivity : AppCompatActivity() {
 
@@ -38,7 +33,7 @@ class MainActivity : AppCompatActivity() {
             Looper.myLooper()
         )
 
-        DustNotiAlarm(this).register()
+        DustNotiAlarm(this).regist()
     }
 
     private fun buildLocationCallBack() {

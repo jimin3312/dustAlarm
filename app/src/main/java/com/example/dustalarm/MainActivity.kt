@@ -43,27 +43,30 @@ class MainActivity : AppCompatActivity() {
                 val location = p0!!.locations.get(p0.locations.size - 1)
 
                 val gCoder = Geocoder(this@MainActivity, Locale.getDefault())
+
                 val addr: List<Address> =
                     gCoder.getFromLocation(location.latitude, location.longitude, 1)
-                val address: Address = addr[0]
-                mLocation.setText(address.adminArea + " "+ address.subLocality+ " " + address.thoroughfare)
+                if(addr.size>0)
+                {
+                    val address: Address = addr[0]
+                    mLocation.setText(address.adminArea + " " + address.subLocality + " " + address.thoroughfare)
 
-                var pm: Pair<String, String>
-                object : Thread(){
-                    override fun run() {
-                        super.run()
-                        pm = DustAPI(address.thoroughfare).recieveTMLocation()
-                            .recieveStationName()
-                            .recievePm10Pm25()
-                        pm10.post{
-                            pm10.setText(pm.first)
+                    var pm: Pair<String, String>
+                    object : Thread() {
+                        override fun run() {
+                            super.run()
+                            pm = DustAPI(address.thoroughfare).recieveTMLocation()
+                                .recieveStationName()
+                                .recievePm10Pm25()
+                            pm10.post {
+                                pm10.setText(pm.first)
+                            }
+                            pm25.post {
+                                pm25.setText(pm.second)
+                            }
                         }
-                        pm25.post{
-                            pm25.setText(pm.second)
-                        }
-                    }
-                }.start()
-
+                    }.start()
+                }
                 fusedLocationProviderClient.removeLocationUpdates(locationCallback)
             }
         }

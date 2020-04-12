@@ -88,14 +88,12 @@ class DustAPI {
         return this
     }
 
-    fun recievePm10Pm25(): Pair<String, String>{
+    fun recievePm10Pm25(): Pair<Int , Int>{
         if(stationName == null)
             stationName = umd;
 
-        val stationCall: Callable<Pair<String, String>> =
-            Callable<Pair<String, String>> {
-                var pm10 = ""
-                var pm25 = ""
+        val stationCall: Callable<Pair<Int, Int>> =
+            Callable<Pair<Int, Int>> {
                 try {
                     var mURL =
                         "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?"
@@ -107,16 +105,16 @@ class DustAPI {
 
                     var line = bufferedReader.readLine()
                     var jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
-                    pm10 = jsonObject.getString("pm10Value")
-                    pm25 = jsonObject.getString("pm25Value")
+                    var pm10 = jsonObject.getString("pm10Value")
+                    var pm25 = jsonObject.getString("pm25Value")
                     bufferedReader.close()
                     connection.disconnect()
-                    Pair(pm10, pm25)
+                    Pair(pm10.toInt(), pm25.toInt())
                 } catch (e: Exception) {
-                    Pair(pm10, pm25)
+                    Pair(0, 0)
                 }
             }
-        val future: Future<Pair<String, String>> = service.submit(stationCall)
+        val future: Future<Pair<Int, Int>> = service.submit(stationCall)
         return future.get()
     }
 }

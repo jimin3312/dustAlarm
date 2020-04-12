@@ -19,7 +19,7 @@ class DustReceiver : BroadcastReceiver() {
 
     val CHANNEL_ID = "maskPush"
     val NOTIFICATION_ID = 123
-    lateinit var pm: Pair<String, String>
+    lateinit var pm: Pair<Int, Int>
     lateinit var locationCallback: LocationCallback
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
@@ -28,7 +28,7 @@ class DustReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         this.context = context
         if(intent!!.action == "android.permission.RECEIVE_BOOT_COMPLETED")
-            DustNotiAlarm(context).regist()
+            DustNotiAlarm(context).register()
 
         buildLocationCallBack()
         buildLocationRequest()
@@ -51,6 +51,7 @@ class DustReceiver : BroadcastReceiver() {
             val notificationManager =
                 context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
             notificationManager.createNotificationChannel(channel)
+
         }
     }
 

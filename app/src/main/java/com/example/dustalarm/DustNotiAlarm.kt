@@ -17,45 +17,22 @@ class DustNotiAlarm {
         this.alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
-    fun register() {
-        var intent = Intent(context, DustReceiver::class.java)
+    fun regist() {
+        val intent: Intent = Intent(context, DustReceiver::class.java)
         intent.action = "android.intent.action.Main"
-        var alarmUP  = (PendingIntent.getBroadcast(context, 0, intent,  PendingIntent.FLAG_NO_CREATE))
-        if(alarmUP == null)
-        {
-            val pendingIntent = PendingIntent.getBroadcast(
-                context, 0,
-                intent, 0
-            )
-            val calendar: Calendar = Calendar.getInstance().apply {
-                timeInMillis = System.currentTimeMillis()
-                set(Calendar.HOUR_OF_DAY, 10)
-                set(Calendar.MINUTE, 1)
-                set(Calendar.SECOND, 0)
-            }
-            val alarmManager =
-                context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            alarmManager.setInexactRepeating(
-                    AlarmManager.RTC_WAKEUP,
-                    calendar.timeInMillis,
-                    AlarmManager.INTERVAL_DAY,
-                pendingIntent
-            )
+
+        val registerdSender: PendingIntent? = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
+        val calendar: Calendar = Calendar.getInstance().apply {
+            timeInMillis = System.currentTimeMillis()
+            set(Calendar.HOUR_OF_DAY, 10)
+            set(Calendar.MINUTE, 0)
+            set(Calendar.SECOND, 0)
         }
 
-        //val sender: PendingIntent = PendingIntent.getBroadcast(context, 0, intent, 0)
-
-//        val registerdSender: PendingIntent? = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
-
-//
-//        if(alarmUP == null){
-//            val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
-//            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, registerdSender)
-//            Log.d("TEST","alarm")
-//        }
-        //알람 예약
-
-        //alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, sender)
-
+        if(registerdSender == null){
+            val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+            alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, sender)
+        }
     }
+
 }

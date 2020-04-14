@@ -28,7 +28,7 @@ class DustReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent?) {
         this.context = context
         if(intent!!.action == "android.permission.RECEIVE_BOOT_COMPLETED")
-            DustNotiAlarm(context).register()
+            DustNotiAlarm(context).regist()
 
         buildLocationCallBack()
         buildLocationRequest()

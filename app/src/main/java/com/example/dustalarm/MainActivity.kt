@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
             Looper.myLooper()
         )
 
-        DustNotiAlarm(this).register()
+        DustNotiAlarm(this).regist()
     }
 
     private fun buildLocationCallBack() {

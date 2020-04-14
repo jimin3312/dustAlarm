@@ -51,69 +51,59 @@ class MainActivity : AppCompatActivity() {
                 if (addr.size > 0) {
                     val address: Address = addr[0]
                     mLocation.setText(address.adminArea + " " + address.subLocality + " " + address.thoroughfare)
-                    var check10:Int
-                    var check25:Int
+                    var check10: Int
+                    var check25: Int
                     var pm: Pair<Int, Int>
                     object : Thread() {
                         override fun run() {
                             super.run()
-                            pm = DustAPI("구로구").recieveTMLocation()
+                            pm = DustAPI(address.thoroughfare).recieveTMLocation()
                                 .recieveStationName()
                                 .recievePm10Pm25()
                             runOnUiThread(Runnable {
                                 run()
                                 {
 
-                                    var pm10State:String
-                                    var pm25State:String
-                                    if(pm.first > 150)
-                                    {
-                                        pm10State=  "매우 나쁨"
+                                    var pm10State: String
+                                    var pm25State: String
+                                    if (pm.first > 150) {
+                                        pm10State = "매우 나쁨"
                                         check10 = 4
-                                    } else if(pm.first > 80)
-                                    {
-                                        pm10State=  "나쁨"
+                                    } else if (pm.first > 80) {
+                                        pm10State = "나쁨"
                                         check10 = 3
-                                    } else if(pm.first > 80) {
-                                        pm10State=  "보통"
+                                    } else if (pm.first > 80) {
+                                        pm10State = "보통"
                                         check10 = 2
-                                    }
-                                    else  {
-                                        pm10State= "좋음"
-                                        check10 =1
+                                    } else {
+                                        pm10State = "좋음"
+                                        check10 = 1
                                     }
 
-                                    if(pm.second > 75)
-                                    {
-                                        pm25State=  "매우 나쁨"
+                                    if (pm.second > 75) {
+                                        pm25State = "매우 나쁨"
                                         check25 = 4
-                                    } else if(pm.second > 35)
-                                    {
-                                        pm25State=  "나쁨"
+                                    } else if (pm.second > 35) {
+                                        pm25State = "나쁨"
                                         check25 = 3
-                                    } else if(pm.second > 15) {
-                                        pm25State=  "보통"
+                                    } else if (pm.second > 15) {
+                                        pm25State = "보통"
                                         check25 = 2
-                                    }
-                                    else  {
-                                        pm25State=  "좋음"
+                                    } else {
+                                        pm25State = "좋음"
                                         check25 = 1
                                     }
-                                    var maxValue = max(check10,check25)
-                                    if(maxValue == 1)
-                                    {
+                                    var maxValue = max(check10, check25)
+                                    if (maxValue == 1) {
                                         dustStateFace.setImageResource(R.drawable.good)
                                         main_constraintLayout.setBackgroundColor(Color.parseColor("#87c1ff"))
-                                    }else if(maxValue==2)
-                                    {
+                                    } else if (maxValue == 2) {
                                         dustStateFace.setImageResource(R.drawable.normal2)
                                         main_constraintLayout.setBackgroundColor(Color.parseColor("#6b94c2"))
-                                    }else if(maxValue==3)
-                                    {
+                                    } else if (maxValue == 3) {
                                         dustStateFace.setImageResource(R.drawable.bad)
                                         main_constraintLayout.setBackgroundColor(Color.parseColor("#7e92a8"))
-                                    }else if(maxValue==4)
-                                    {
+                                    } else if (maxValue == 4) {
                                         dustStateFace.setImageResource(R.drawable.very_bad)
                                         main_constraintLayout.setBackgroundColor(Color.parseColor("#87888a"))
                                     }

@@ -1,5 +1,7 @@
 package com.example.dustalarm
 
+import com.example.dustalarm.model.Dust
+import com.example.dustalarm.view.MainActivity
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.lang.Exception
@@ -12,6 +14,7 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
 class DustAPI {
+
     var service: ExecutorService
     lateinit var bufferedReader: BufferedReader
     lateinit var connection: HttpURLConnection
@@ -34,7 +37,7 @@ class DustAPI {
                 try {
                     var mURL = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?"
                     mURL += "umdName=" + umdName
-                    mURL += "&pageNo=1&numOfRows=10&_returnType=json&ServiceKey=" + MainActivity.KEY
+                    mURL += "&pageNo=1&numOfRows=10&_returnType=json&ServiceKey=" + Dust.KEY
 
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
@@ -66,7 +69,7 @@ class DustAPI {
                         "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?"
                     mURL += "tmX=" + tmLocation.first
                     mURL += "&tmY=" + tmLocation.second
-                    mURL += "&_returnType=json&ServiceKey=" + MainActivity.KEY
+                    mURL += "&_returnType=json&ServiceKey=" + Dust.KEY
 
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
@@ -98,7 +101,7 @@ class DustAPI {
                     var mURL =
                         "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?"
                     mURL += "stationName=" + stationName
-                    mURL += "&dataTerm=daily&pageNo=1&numOfRows=10&ver=1.3&_returnType=json&ServiceKey=" + MainActivity.KEY
+                    mURL += "&dataTerm=daily&pageNo=1&numOfRows=10&ver=1.3&_returnType=json&ServiceKey=" + Dust.KEY
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
                     bufferedReader = connection.inputStream.bufferedReader()

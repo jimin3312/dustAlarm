@@ -1,144 +1,150 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity"
-    android:id="@+id/main_constraintLayout"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    >
-
-
-    <androidx.appcompat.widget.AppCompatImageView
-        android:layout_width="240dp"
-        android:layout_height="240dp"
-        android:src="@drawable/good"
-        android:id="@+id/dustStateFace"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.5">
-
-    </androidx.appcompat.widget.AppCompatImageView>
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="주소"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.13">
-    </TextView>
-    <TextView
-        android:id="@+id/mLocation"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="지역"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.18">
-
-    </TextView>
-
+    <data>
+        <variable
+            name="viewModel"
+            type="com.example.dustalarm.viewmodel.MainActivityViewModel" />
+    </data>
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/pmBackground"
+        android:layout_height="match_parent"
         android:layout_width="match_parent"
-        android:layout_height="250dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="1.0">
-        <TextView
-            android:gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="미세먼지"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4" />
-        <TextView
-            android:gravity="center"
-            android:id="@+id/pm10"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="미세먼지 수치"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+        tools:context=".view.MainActivity"
+        >
 
-        <TextView
-            android:gravity="center"
-            android:id="@+id/pm10_state"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="미세먼지 상태"
+        <androidx.appcompat.widget.AppCompatImageView
+            android:layout_width="240dp"
+            android:layout_height="240dp"
+            android:src="@drawable/good"
+            android:id="@+id/dustStateFace"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.2"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6" />
-        <TextView
-            android:gravity="center"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="초미세먼지"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.4" />
-        <TextView
-            android:gravity="center"
-            android:id="@+id/pm25"
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="초미세먼지 수치"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
-            app:layout_constraintLeft_toLeftOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.5" />
+            app:layout_constraintVertical_bias="0.5">
 
+        </androidx.appcompat.widget.AppCompatImageView>
         <TextView
-            android:gravity="center"
-            android:id="@+id/pm25_state"
-            android:layout_width="100dp"
+            android:id="@+id/mLocation"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="초미세먼지 상태"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintHorizontal_bias="0.8"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.6"
-            />
+            app:layout_constraintVertical_bias="0.18"
+            android:text="@{viewModel.dustInfo.location}"
+            tools:text="지역">
+
+        </TextView>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/pmBackground"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0">
+            <TextView
+                android:gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="미세먼지"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4" />
+            <TextView
+                android:gravity="center"
+                android:id="@+id/pm10"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                android:text="@{viewModel.dustInfo.pm10Value}"
+                tools:text="미세먼지 값"/>
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/pm10_state"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.2"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.6"
+                android:text="@{viewModel.dustInfo.pm10State}"
+                tools:text="미세먼지 상태"/>
+            <TextView
+                android:gravity="center"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                android:text="초미세먼지"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.4"
+
+                />
+            <TextView
+                android:gravity="center"
+                android:id="@+id/pm25"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5"
+                android:text="@{viewModel.dustInfo.pm25Value}"
+                tools:text="초미세먼지 값"/>
+
+            <TextView
+                android:gravity="center"
+                android:id="@+id/pm25_state"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_bias="0.8"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.6"
+                android:text="@{viewModel.dustInfo.pm25State}"
+                tools:text="초미세먼지 상태"
+                />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <!--    <Button-->
+        <!--        android:id="@+id/btn1"-->
+        <!--        app:layout_constraintTop_toTopOf="parent"-->
+        <!--        app:layout_constraintLeft_toLeftOf="parent"-->
+        <!--        android:layout_width="wrap_content"-->
+        <!--        android:layout_height="wrap_content"-->
+        <!--        android:text="업데이트"/>-->
+
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-<!--    <Button-->
-<!--        android:id="@+id/btn1"-->
-<!--        app:layout_constraintTop_toTopOf="parent"-->
-<!--        app:layout_constraintLeft_toLeftOf="parent"-->
-<!--        android:layout_width="wrap_content"-->
-<!--        android:layout_height="wrap_content"-->
-<!--        android:text="업데이트"/>-->
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+
+</layout>

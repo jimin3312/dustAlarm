@@ -10,8 +10,13 @@ import com.example.dustalarm.model.DustDao
 
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     val dust = Dust(application)
-    val dustInfo: MutableLiveData<DustDao> by lazy {
-        dust.getInfo()
+    lateinit var dustInfo: MutableLiveData<DustDao>
+
+    init {
+        load()
     }
 
+    public fun load() {
+        dustInfo = dust.getInfo()
+    }
 }

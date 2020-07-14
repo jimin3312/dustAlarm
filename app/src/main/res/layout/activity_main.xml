@@ -140,7 +140,7 @@
                 app:layout_constraintLeft_toLeftOf="parent"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:onClick="@{()->viewModel.load()}"
                 android:text="업데이트"/>
 
 

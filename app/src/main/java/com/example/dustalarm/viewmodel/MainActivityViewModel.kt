@@ -11,16 +11,7 @@ import com.example.dustalarm.model.DustDao
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     val dust = Dust(application)
     val dustInfo: MutableLiveData<DustDao> by lazy {
-        MutableLiveData<DustDao>().also {
-            load()
-        }
-    }
-    fun getUsers(): LiveData<DustDao> {
-        return dustInfo
+        dust.getInfo()
     }
 
-    private fun load() {
-        // Do an asynchronous operation to fetch users.
-        dust.getDustInfo() as MutableLiveData<DustDao>
-    }
 }

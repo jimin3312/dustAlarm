@@ -5,6 +5,7 @@ import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.os.Looper
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.dustalarm.DustAPI
@@ -13,20 +14,13 @@ import com.google.android.gms.location.*
 import java.util.*
 
 class Dust(val context: Context) {
-    companion object {
-        val KEY =
-            "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
-        val REQUEST_CODE = 1000
-    }
-
-    val dustInfo = MutableLiveData<DustDao>()
 
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
 
-    fun getDustInfo(): LiveData<DustDao> {
-        dustInfo.value = DustDao()
+    var dustInfo = MutableLiveData<DustDao>()
+    fun getInfo(): MutableLiveData<DustDao> {
 
         buildLocationRequest()
         buildLocationCallBack()
@@ -45,6 +39,7 @@ class Dust(val context: Context) {
         locationCallback = object : LocationCallback() {
 
             override fun onLocationResult(p0: LocationResult?) {
+                Log.d("로그","locationCallback")
                 val location = p0!!.locations.get(p0.locations.size - 1)
 
                 val gCoder = Geocoder(context, Locale.getDefault())
@@ -55,8 +50,8 @@ class Dust(val context: Context) {
                 if (addr.size > 0) {
                     val address: Address = addr[0]
 
-                    dustInfo.value!!.location = "${address.adminArea} ${address.subLocality} ${address.thoroughfare}"
-//                    mLocation.setText(address.adminArea + " " + address.subLocality + " " + address.thoroughfare)
+                    val newDustDao = DustDao()
+                    newDustDao.location = "${address.adminArea} ${address.subLocality} ${address.thoroughfare}"
 
                     var check10: Int
                     var check25: Int
@@ -65,6 +60,7 @@ class Dust(val context: Context) {
                     object : Thread() {
                         override fun run() {
                             super.run()
+                            Log.d("로그","workerThread")
                             pm = DustAPI(address.thoroughfare)
                                 .recieveTMLocation()
                                 .recieveStationName()
@@ -114,21 +110,18 @@ class Dust(val context: Context) {
 //                                main_constraintLayout.setBackgroundColor(Color.parseColor("#87888a"))
 //                            }
 
-                            dustInfo.value!!.pm10Value = pm.first.toString()
-                            dustInfo.value!!.pm25Value = pm.second.toString()
-                            dustInfo.value!!.pm10State = pm10State
-                            dustInfo.value!!.pm25State = pm25State
+                            Log.d("로그","pm10 ${pm.first}")
+                            Log.d("로그","pm25 ${pm.second}")
+                            Log.d("로그","pm10 state $pm10State")
+                            Log.d("로그","pm25 state $pm25State")
 
-//                            pm10.text = pm.first.toString()
-//                            pm10_state.text = pm10State
-//                            pm25.text = pm.second.toString()
-//                            pm25_state.text = pm25State
-//                        pm10.post{
-//                            pm10.setText(pm.first)
-//                        }
-//                        pm25.post{
-//                            pm25.setText(pm.second)
-//                        }
+                            newDustDao.pm10Value = pm.first.toString()
+                            newDustDao.pm25Value = pm.second.toString()
+                            newDustDao.pm10State = pm10State
+                            newDustDao.pm25State = pm25State
+
+                            dustInfo.postValue(newDustDao)
+
                         }
                     }.start()
                     fusedLocationProviderClient.removeLocationUpdates(locationCallback)

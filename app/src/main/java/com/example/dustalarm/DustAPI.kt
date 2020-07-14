@@ -1,5 +1,6 @@
 package com.example.dustalarm
 
+import android.util.Log
 import com.example.dustalarm.model.Dust
 import com.example.dustalarm.view.MainActivity
 import org.json.JSONObject
@@ -14,6 +15,10 @@ import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
 class DustAPI {
+    companion object {
+        val KEY = "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
+        val REQUEST_CODE = 1000
+    }
 
     var service: ExecutorService
     lateinit var bufferedReader: BufferedReader
@@ -37,7 +42,7 @@ class DustAPI {
                 try {
                     var mURL = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?"
                     mURL += "umdName=" + umdName
-                    mURL += "&pageNo=1&numOfRows=10&_returnType=json&ServiceKey=" + Dust.KEY
+                    mURL += "&pageNo=1&numOfRows=10&_returnType=json&ServiceKey=$KEY"
 
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
@@ -47,7 +52,6 @@ class DustAPI {
                     val jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
                     tmX = jsonObject.getString("tmX")
                     tmY = jsonObject.getString("tmY")
-
                     bufferedReader.close()
                     connection.disconnect()
                     Pair(tmX, tmY)
@@ -69,7 +73,7 @@ class DustAPI {
                         "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getNearbyMsrstnList?"
                     mURL += "tmX=" + tmLocation.first
                     mURL += "&tmY=" + tmLocation.second
-                    mURL += "&_returnType=json&ServiceKey=" + Dust.KEY
+                    mURL += "&_returnType=json&ServiceKey=" + KEY
 
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
@@ -101,7 +105,7 @@ class DustAPI {
                     var mURL =
                         "http://openapi.airkorea.or.kr/openapi/services/rest/ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty?"
                     mURL += "stationName=" + stationName
-                    mURL += "&dataTerm=daily&pageNo=1&numOfRows=10&ver=1.3&_returnType=json&ServiceKey=" + Dust.KEY
+                    mURL += "&dataTerm=daily&pageNo=1&numOfRows=10&ver=1.3&_returnType=json&ServiceKey=" + KEY
                     mURL = URLDecoder.decode(mURL, "UTF-8")
                     connection = URL(mURL).openConnection() as HttpURLConnection
                     bufferedReader = connection.inputStream.bufferedReader()
@@ -110,6 +114,9 @@ class DustAPI {
                     var jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
                     var pm10 = jsonObject.getString("pm10Value")
                     var pm25 = jsonObject.getString("pm25Value")
+                    Log.d("로그", "API")
+                    Log.d("로그", pm10)
+                    Log.d("로그", pm25)
                     bufferedReader.close()
                     connection.disconnect()
                     Pair(pm10.toInt(), pm25.toInt())

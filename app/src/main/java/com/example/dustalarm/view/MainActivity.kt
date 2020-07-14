@@ -1,6 +1,7 @@
 package com.example.dustalarm.view
 
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -28,12 +29,12 @@ class MainActivity : AppCompatActivity() {
             R.layout.activity_main
         )
         binding.lifecycleOwner = this
-
         binding.viewModel = viewModel
+
 //        binding.viewModel?.getUsers()?.observe(this, Observer<DustDao> {
 //            mLocation.text = it.location
 //        })
-        Log.d("TEST", "" +viewModel?.dust.getDustInfo().value?.pm10State)
+
 //        DustNotiAlarm(this).regist()
     }
 }

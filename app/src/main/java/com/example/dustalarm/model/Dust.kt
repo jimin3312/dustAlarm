@@ -20,7 +20,9 @@ class Dust(val context: Context) {
     lateinit var locationCallback: LocationCallback
 
     var dustInfo = MutableLiveData<DustDao>()
-    fun getInfo(): MutableLiveData<DustDao> {
+    var dustImg = MutableLiveData<Int>()
+    var dustBackgroundColor = MutableLiveData<Int>()
+    fun getInfo(){
 
         buildLocationRequest()
         buildLocationCallBack()
@@ -31,8 +33,6 @@ class Dust(val context: Context) {
             locationCallback,
             Looper.myLooper()
         )
-
-        return dustInfo
     }
 
     private fun buildLocationCallBack() {
@@ -96,19 +96,22 @@ class Dust(val context: Context) {
                                 check25 = 1
                             }
                             var maxValue = Math.max(check10, check25)
-//                            if (maxValue == 1) {
-//                                dustStateFace.setImageResource(R.drawable.good)
-//                                main_constraintLayout.setBackgroundColor(Color.parseColor("#87c1ff"))
-//                            } else if (maxValue == 2) {
-//                                dustStateFace.setImageResource(R.drawable.normal2)
-//                                main_constraintLayout.setBackgroundColor(Color.parseColor("#6b94c2"))
-//                            } else if (maxValue == 3) {
-//                                dustStateFace.setImageResource(R.drawable.bad)
-//                                main_constraintLayout.setBackgroundColor(Color.parseColor("#7e92a8"))
-//                            } else if (maxValue == 4) {
-//                                dustStateFace.setImageResource(R.drawable.very_bad)
-//                                main_constraintLayout.setBackgroundColor(Color.parseColor("#87888a"))
-//                            }
+                            var resId : Int = R.drawable.normal
+                            var color : Int = Color.parseColor("#6b94c2")
+
+                            if (maxValue == 1) {
+                                resId = R.drawable.good
+                                color = Color.parseColor("#87c1ff")
+                            } else if (maxValue == 2) {
+                                resId = R.drawable.normal
+                                color = Color.parseColor("#6b94c2")
+                            } else if (maxValue == 3) {
+                                resId = R.drawable.bad
+                                color = Color.parseColor("#7e92a8")
+                            } else if (maxValue == 4) {
+                                resId = R.drawable.very_bad
+                                color = Color.parseColor("#87888a")
+                            }
 
                             Log.d("로그","pm10 ${pm.first}")
                             Log.d("로그","pm25 ${pm.second}")
@@ -121,7 +124,8 @@ class Dust(val context: Context) {
                             newDustDao.pm25State = pm25State
 
                             dustInfo.postValue(newDustDao)
-
+                            dustBackgroundColor.postValue(color)
+                            dustImg.postValue(resId)
                         }
                     }.start()
                     fusedLocationProviderClient.removeLocationUpdates(locationCallback)

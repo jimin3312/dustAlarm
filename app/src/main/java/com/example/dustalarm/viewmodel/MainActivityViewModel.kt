@@ -11,12 +11,18 @@ import com.example.dustalarm.model.DustDao
 class MainActivityViewModel(application: Application) : AndroidViewModel(application) {
     val dust = Dust(application)
     lateinit var dustInfo: MutableLiveData<DustDao>
+    lateinit var dustImg : MutableLiveData<Int>
+    lateinit var dustBackgroundColor : MutableLiveData<Int>
 
     init {
         load()
     }
 
     public fun load() {
-        dustInfo = dust.getInfo()
+        dust.getInfo()
+
+        dustInfo = dust.dustInfo
+        dustImg = dust.dustImg
+        dustBackgroundColor = dust.dustBackgroundColor
     }
 }

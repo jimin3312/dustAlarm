@@ -13,12 +13,13 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         tools:context=".view.MainActivity"
+        android:background="@{viewModel.dustBackgroundColor.intValue()}"
         >
 
         <androidx.appcompat.widget.AppCompatImageView
             android:layout_width="240dp"
             android:layout_height="240dp"
-            android:src="@drawable/good"
+            imageResource="@{viewModel.dustImg}"
             android:id="@+id/dustStateFace"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintHorizontal_bias="0.5"

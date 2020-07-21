@@ -3,6 +3,9 @@ package com.example.dustalarm
 import android.util.Log
 import com.example.dustalarm.model.Dust
 import com.example.dustalarm.view.MainActivity
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.internal.cacheGet
 import org.json.JSONObject
 import java.io.BufferedReader
 import java.lang.Exception
@@ -39,21 +42,36 @@ class DustAPI {
                 var tmX = ""
                 var tmY = ""
                 var umdName = umd
+                val okHttpClient = OkHttpClient()
                 try {
                     var mURL = "http://openapi.airkorea.or.kr/openapi/services/rest/MsrstnInfoInqireSvc/getTMStdrCrdnt?"
                     mURL += "umdName=" + umdName
                     mURL += "&pageNo=1&numOfRows=10&_returnType=json&ServiceKey=$KEY"
-
                     mURL = URLDecoder.decode(mURL, "UTF-8")
-                    connection = URL(mURL).openConnection() as HttpURLConnection
-                    bufferedReader = connection.inputStream.bufferedReader()
 
-                    val line = bufferedReader.readLine()
-                    val jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
+                    val request = Request.Builder()
+                        .url(mURL)
+                        .build()
+
+                    OkHttpClient.Builder()
+
+
+//                    Request.Builder().apply {
+//                        cache(get())
+//                    }
+
+                    val response = okHttpClient.newCall(request).execute()
+                    val jsonObject = JSONObject(response.body!!.string()).getJSONArray("list").getJSONObject(0)
+
+//                    connection = URL(mURL).openConnection() as HttpURLConnection
+//                    bufferedReader = connection.inputStream.bufferedReader()
+//
+//                    val line = bufferedReader.readLine()
+//                    val jsonObject = JSONObject(line).getJSONArray("list").getJSONObject(0)
                     tmX = jsonObject.getString("tmX")
                     tmY = jsonObject.getString("tmY")
-                    bufferedReader.close()
-                    connection.disconnect()
+//                    bufferedReader.close()
+//                    connection.disconnect()
                     Pair(tmX, tmY)
                 } catch (e: Exception) {
                     Pair(tmX, tmY)

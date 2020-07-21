@@ -51,4 +51,11 @@ dependencies {
     implementation "androidx.activity:activity-ktx:1.1.0"
     implementation "android.arch.lifecycle:extensions:1.1.1"
 
+    implementation("com.squareup.okhttp3:okhttp:4.8.0")
+
+    //koin
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-android:$koin_version"
+    implementation "org.koin:koin-androidx-viewmodel:$koin_version"
+
 }

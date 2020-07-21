@@ -8,95 +8,66 @@ import android.content.Context
 import android.content.Intent
 import android.location.Address
 import android.location.Geocoder
+import android.location.Location
 import android.os.Build
 import android.os.Looper
+import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.dustalarm.view.MainActivity
 import com.google.android.gms.location.*
 import java.util.*
+import kotlin.math.log
 
 class DustReceiver : BroadcastReceiver() {
 
-    val CHANNEL_ID = "maskPush"
-    val NOTIFICATION_ID = 123
+    var longitude: Double? = null
+    var latitude: Double? = null
+
     lateinit var pm: Pair<Int, Int>
-    lateinit var locationCallback: LocationCallback
     lateinit var locationRequest: LocationRequest
     lateinit var fusedLocationProviderClient: FusedLocationProviderClient
     lateinit var context: Context
 
     override fun onReceive(context: Context, intent: Intent?) {
         this.context = context
-        if(intent!!.action == "android.permission.RECEIVE_BOOT_COMPLETED")
-            DustNotiAlarm(context).regist()
-
-        buildLocationCallBack()
         buildLocationRequest()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(context)
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
-    }
 
-    private fun createNotificationChannel() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val name = context.getString(R.string.channel_name)
-            val descriptionText = context.getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val channel = NotificationChannel(CHANNEL_ID, name, importance).apply {
-                description = descriptionText
+        if (intent!!.action.equals("android.intent.action.Main")) {
+            val pendingIntent =
+                PendingIntent.getBroadcast(context,
+                    0,
+                    Intent(context, DustReceiver::class.java).apply { action = "location" },
+                    PendingIntent.FLAG_UPDATE_CURRENT)
+
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, pendingIntent)
+        }
+        else if(intent.action.equals("dust")){
+            val pendingIntent =
+                PendingIntent.getBroadcast(context,
+                    0,
+                    Intent(context, DustReceiver::class.java).apply { action = "load" },
+                    PendingIntent.FLAG_UPDATE_CURRENT)
+
+            fusedLocationProviderClient.requestLocationUpdates(locationRequest, pendingIntent)
+        }
+        else {
+            val location: LocationResult? = LocationResult.extractResult(intent)
+            val loc: Location? = location?.lastLocation
+
+            if(loc != null){
+                latitude = loc.latitude
+                longitude = loc.longitude
             }
-            val notificationManager =
-                context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(channel)
 
-        }
-    }
-
-    private fun pushNotification() {
-
-        val intent = Intent(context, MainActivity::class.java).apply {
-            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        }
-
-        val pendingIntent: PendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-
-        val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.drawable.ic_launcher_background)
-            .setContentTitle("미세 먼지")
-            .setContentText("미세 먼지 : " + pm.first + " 초미세 먼지 : " + pm.second)
-            .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            // Set the intent that will fire when the user taps the notification
-            .setContentIntent(pendingIntent)
-            .setAutoCancel(true)
-
-        with(NotificationManagerCompat.from(context)) {
-            notify(NOTIFICATION_ID, builder.build())
-        }
-    }
-
-    private fun buildLocationCallBack() {
-        locationCallback = object : LocationCallback() {
-
-            override fun onLocationResult(p0: LocationResult?) {
-                val location = p0!!.locations.get(p0.locations.size - 1)
-
-                val gCoder = Geocoder(context, Locale.getDefault())
-                val addr: List<Address> =
-                    gCoder.getFromLocation(location.latitude, location.longitude, 1)
-                val address: Address = addr[0]
-
-                pm = DustAPI(address.thoroughfare).recieveTMLocation()
-                    .recieveStationName()
-                    .recievePm10Pm25()
-
-                createNotificationChannel()
-                pushNotification()
-
-                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            if(latitude != null && longitude != null){
+                val serviceIntent = Intent(context, NotiIntentService::class.java)
+                serviceIntent.putExtra("latitude", latitude as Double)
+                serviceIntent.putExtra("longitude", longitude as Double)
+                serviceIntent.action =
+                    if(intent.action .equals("location")) "notify" else "load"
+                NotiIntentService().enqueueJob(context, serviceIntent)
             }
         }
     }
@@ -106,6 +77,5 @@ class DustReceiver : BroadcastReceiver() {
         locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         locationRequest.interval = 5000
         locationRequest.fastestInterval = 3000
-        locationRequest.smallestDisplacement = 10f
     }
 }

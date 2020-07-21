@@ -1,4 +1,4 @@
-package com.example.dustalarm.model
+package com.example.dustalarm.model.DTO
 
 import android.graphics.Color
 import com.example.dustalarm.R

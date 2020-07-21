@@ -1,3 +1,3 @@
 package com.example.dustalarm.model.DTO
 
-data class Address(val addr: String = "")
+data class Addr(val addr: String = "")

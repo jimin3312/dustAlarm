@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
@@ -13,31 +14,29 @@ import android.util.Log
 import androidx.core.app.JobIntentService
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
+import com.example.dustalarm.model.DTO.Addr
+import com.example.dustalarm.model.DTO.DustDTO
+import com.example.dustalarm.model.DTO.ViewResources
+import com.example.dustalarm.model.Dust
 import com.example.dustalarm.view.MainActivity
 import com.google.android.gms.location.*
+import org.koin.android.ext.android.inject
 import java.util.*
 
 class NotiIntentService : JobIntentService(){
     val CHANNEL_ID = "maskPush"
     val NOTIFICATION_ID = 123
     lateinit var pm: Pair<Int, Int>
-    lateinit var locationCallback: LocationCallback
-    lateinit var locationRequest: LocationRequest
-    lateinit var fusedLocationProviderClient: FusedLocationProviderClient
+    var longitude: Double = 0.0
+    var latitude: Double = 0.0
 
-    fun enqueueJob(context: Context, intent: Intent){
-        Log.d("노티 1", " ")
+    fun enqueueJob(context: Context, intent: Intent) {
         enqueueWork(context, NotiIntentService::class.java, 1000, intent)
     }
 
     override fun onHandleWork(intent: Intent) {
-        Log.d("노티 2", " ")
-        
-        val longitude = intent.getDoubleExtra("longitude", 0.0)
-        val latitude = intent.getDoubleExtra("latitude", 0.0)
-
-        Log.d("위도" , "$longitude")
-        Log.d("경도" , "$latitude")
+        longitude = intent.getDoubleExtra("longitude", 0.0)
+        latitude = intent.getDoubleExtra("latitude", 0.0)
 
         val gCoder = Geocoder(this@NotiIntentService, Locale.getDefault())
         val addr: List<Address> =
@@ -48,17 +47,13 @@ class NotiIntentService : JobIntentService(){
             .recieveStationName()
             .recievePm10Pm25()
 
-        createNotificationChannel()
-        pushNotification()
+        if(intent.action == "notify"){
+            createNotificationChannel()
+            pushNotification()
+        }else{
+            updateData()
+        }
 
-//        buildLocationCallBack()
-//        buildLocationRequest()
-//        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
-//        fusedLocationProviderClient.requestLocationUpdates(
-//            locationRequest,
-//            locationCallback,
-//            Looper.myLooper()
-//        )
     }
 
     private fun createNotificationChannel() {
@@ -88,10 +83,8 @@ class NotiIntentService : JobIntentService(){
             .setContentTitle("미세 먼지")
             .setContentText("미세 먼지 : " + pm.first + " 초미세 먼지 : " + pm.second)
             .setPriority(NotificationCompat.PRIORITY_DEFAULT)
-            // Set the intent that will fire when the user taps the notification
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
-
 
         with(NotificationManagerCompat.from(this)) {
             notify(NOTIFICATION_ID, builder.build())
@@ -99,37 +92,82 @@ class NotiIntentService : JobIntentService(){
 
     }
 
-    private fun buildLocationCallBack() {
-        locationCallback = object : LocationCallback() {
+    private fun updateData(){
+        val dust: Dust by inject()
+        val gCoder = Geocoder(this, Locale.getDefault())
 
-            override fun onLocationResult(p0: LocationResult?) {
-                val location = p0!!.locations.get(p0.locations.size - 1)
+        val addr: List<Address> =
+            gCoder.getFromLocation(latitude, longitude, 1)
 
-                val gCoder = Geocoder(this@NotiIntentService, Locale.getDefault())
-                val addr: List<Address> =
-                    gCoder.getFromLocation(location.latitude, location.longitude, 1)
-                val address: Address = addr[0]
+        if (addr.size > 0) {
+            val address: Address = addr[0]
+            dust.address.postValue(Addr("${address.adminArea} ${address.subLocality} ${address.thoroughfare}"))
 
-                pm = DustAPI(address.thoroughfare).recieveTMLocation()
+            val check10: Int
+            val check25: Int
+
+            val pm: Pair<Int, Int> =
+                DustAPI(address.thoroughfare)
+                    .recieveTMLocation()
                     .recieveStationName()
                     .recievePm10Pm25()
 
-                createNotificationChannel()
-                pushNotification()
-
-                fusedLocationProviderClient.removeLocationUpdates(locationCallback)
+            val pm10State: String
+            val pm25State: String
+            if (pm.first > 150) {
+                pm10State = "매우 나쁨"
+                check10 = 4
+            } else if (pm.first > 80) {
+                pm10State = "나쁨"
+                check10 = 3
+            } else if (pm.first > 80) {
+                pm10State = "보통"
+                check10 = 2
+            } else {
+                pm10State = "좋음"
+                check10 = 1
             }
+
+            if (pm.second > 75) {
+                pm25State = "매우 나쁨"
+                check25 = 4
+            } else if (pm.second > 35) {
+                pm25State = "나쁨"
+                check25 = 3
+            } else if (pm.second > 15) {
+                pm25State = "보통"
+                check25 = 2
+            } else {
+                pm25State = "좋음"
+                check25 = 1
+            }
+            val maxValue = Math.max(check10, check25)
+            var resId : Int = R.drawable.normal
+            var color : Int = Color.parseColor("#6b94c2")
+
+            if (maxValue == 1) {
+                resId = R.drawable.good
+                color = Color.parseColor("#87c1ff")
+            } else if (maxValue == 2) {
+                resId = R.drawable.normal
+                color = Color.parseColor("#6b94c2")
+            } else if (maxValue == 3) {
+                resId = R.drawable.bad
+                color = Color.parseColor("#7e92a8")
+            } else if (maxValue == 4) {
+                resId = R.drawable.very_bad
+                color = Color.parseColor("#87888a")
+            }
+
+            dust.dustInfo.postValue(
+                DustDTO(
+                    pm.first.toString(),
+                    pm.second.toString(),
+                    pm10State,
+                    pm25State
+                )
+            )
+            dust.viewResources.postValue(ViewResources(resId, color))
         }
     }
-
-    private fun buildLocationRequest() {
-        locationRequest = LocationRequest()
-        locationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        locationRequest.interval = 5000
-        locationRequest.fastestInterval = 3000
-        locationRequest.smallestDisplacement = 10f
-    }
-
-
-
 }

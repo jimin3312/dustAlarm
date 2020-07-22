@@ -16,12 +16,15 @@ class MainActivityViewModel(application: Application) : AndroidViewModel(applica
     val dustInfo: MutableLiveData<DustDTO>
     val viewResources: MutableLiveData<ViewResources>
     val address : MutableLiveData<Addr>
+    val isLoadingCompleted: MutableLiveData<Boolean>
 
     init {
         load()
         dustInfo = dust.dustInfo
         viewResources = dust.viewResources
         address = dust.address
+        isLoadingCompleted = dust.isLoadingCompleted
+
         DustNotiAlarm(application).regist()
     }
 

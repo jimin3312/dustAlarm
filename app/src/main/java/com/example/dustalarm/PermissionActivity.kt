@@ -72,7 +72,6 @@ class PermissionActivity : Activity() {
         when (requestCode) {
             MainActivity.REQUEST_CODE -> {
                 if (grantResults.size > 0) {
-                    Log.d("권한", "$grantResults")
                     if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
                     {
                         startActivity(Intent(this, MainActivity::class.java))

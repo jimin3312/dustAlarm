@@ -168,6 +168,7 @@ class NotiIntentService : JobIntentService(){
                 )
             )
             dust.viewResources.postValue(ViewResources(resId, color))
+            dust.isLoadingCompleted.postValue(true)
         }
     }
 }

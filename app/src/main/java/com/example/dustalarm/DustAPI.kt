@@ -53,7 +53,9 @@ class DustAPI {
                         .url(mURL)
                         .build()
 
-                    OkHttpClient.Builder()
+                    OkHttpClient.Builder().apply {
+
+                    }
 
 
 //                    Request.Builder().apply {

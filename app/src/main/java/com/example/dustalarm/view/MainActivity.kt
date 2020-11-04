@@ -7,6 +7,7 @@ import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.example.dustalarm.DustAPI
 import com.example.dustalarm.R
 import com.example.dustalarm.databinding.ActivityMainBinding
 import com.example.dustalarm.viewmodel.MainActivityViewModel
@@ -33,13 +34,14 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-        viewModel.isLoadingCompleted.observe(this, Observer {
-                if(it!!){
-                    loadingDialog.dismissDialog()
-                }
-                else{
-                    loadingDialog.startLoading()
-                }
-        })
+//        viewModel.isLoadingCompleted.observe(this, Observer {
+//                if(it!!){
+//                    loadingDialog.dismissDialog()
+//                }
+//                else{
+//                    loadingDialog.startLoading()
+//                }
+//        })
+
     }
 }

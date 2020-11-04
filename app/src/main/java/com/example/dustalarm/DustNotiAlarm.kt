@@ -13,6 +13,7 @@ import java.util.*
 class DustNotiAlarm(val context: Context) {
     val alarmManager: AlarmManager
 
+
     init {
         this.alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }

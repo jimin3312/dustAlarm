@@ -68,6 +68,7 @@ class DustReceiver : BroadcastReceiver() {
                 serviceIntent.action =
                     if(intent.action .equals("location")) "notify" else "load"
                 NotiIntentService().enqueueJob(context, serviceIntent)
+
             }
         }
     }

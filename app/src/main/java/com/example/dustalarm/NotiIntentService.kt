@@ -9,6 +9,7 @@ import android.graphics.Color
 import android.location.Address
 import android.location.Geocoder
 import android.os.Build
+import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.JobIntentService
@@ -33,6 +34,7 @@ class NotiIntentService : JobIntentService(){
     fun enqueueJob(context: Context, intent: Intent) {
         enqueueWork(context, NotiIntentService::class.java, 1000, intent)
     }
+
 
     override fun onHandleWork(intent: Intent) {
         longitude = intent.getDoubleExtra("longitude", 0.0)

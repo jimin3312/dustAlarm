@@ -23,10 +23,9 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 
+const val KEY = "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
+
 interface DustAPI {
-    companion object {
-        val KEY = "3ahny5aBOqdFAnQlYaGDLnLLd3QyV3ORoXp6Aml886Qdp%2FbPCb4rqir5r8IjeWJHnT4HykKItVW2Mv2SIFhvdg%3D%3D"
-    }
 
     @GET("MsrstnInfoInqireSvc/getTMStdrCrdnt")
     fun receiveTMLocation(
@@ -43,7 +42,7 @@ interface DustAPI {
         @Query("tmX") tmX : String,
         @Query("tmY") tmY : String,
         @Query("_returnType") type: String = "json"
-    ) : Single<Station>
+    ) : Single<TM>
 
     @GET("ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty")
     fun receivePm(
@@ -54,7 +53,6 @@ interface DustAPI {
         @Query("_returnType") type: String = "json",
         @Query("dataTerm") dataTerm : String = "daily",
         @Query("ver") ver : String = "1.3"
-
     ) : Single<PM>
 
 }

@@ -7,6 +7,6 @@ import org.koin.android.ext.koin.androidApplication
 import org.koin.dsl.module
 
 val dataModule = module {
-    single { Dust(get()) }
+    single { Dust() }
     factory { GeographyInfo(androidApplication()) }
 }

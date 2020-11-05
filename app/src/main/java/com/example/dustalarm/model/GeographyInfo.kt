@@ -25,8 +25,6 @@ class GeographyInfo(val context: Context) {
         buildLocationCallback()
 
     }
-
-    @SuppressLint("MissingPermission")
     fun update() : Single<Address> {
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,

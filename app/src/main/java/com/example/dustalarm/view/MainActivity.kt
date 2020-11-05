@@ -34,14 +34,14 @@ class MainActivity : AppCompatActivity() {
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
 
-//        viewModel.isLoadingCompleted.observe(this, Observer {
-//                if(it!!){
-//                    loadingDialog.dismissDialog()
-//                }
-//                else{
-//                    loadingDialog.startLoading()
-//                }
-//        })
+        viewModel.isLoadingCompleted.observe(this, Observer {
+                if(it!!){
+                    loadingDialog.dismissDialog()
+                }
+                else{
+                    loadingDialog.startLoading()
+                }
+        })
 
     }
 }

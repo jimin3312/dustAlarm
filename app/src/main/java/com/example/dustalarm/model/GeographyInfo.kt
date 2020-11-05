@@ -1,22 +1,17 @@
 package com.example.dustalarm.model
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
-import android.location.Location
 import android.os.Looper
 import com.google.android.gms.location.*
-import io.reactivex.Completable
-import io.reactivex.Emitter
-import io.reactivex.Single
+import io.reactivex.subjects.PublishSubject
 import java.util.*
-import kotlin.math.sin
 
 class GeographyInfo(val context: Context) {
     lateinit var locationRequest: LocationRequest
     lateinit var locationCallback: LocationCallback
-    lateinit var single: Single<Address>
+    val single: PublishSubject<Address> = PublishSubject.create()
     val fusedLocationProviderClient: FusedLocationProviderClient =
         LocationServices.getFusedLocationProviderClient(context)
 
@@ -25,7 +20,7 @@ class GeographyInfo(val context: Context) {
         buildLocationCallback()
 
     }
-    fun update() : Single<Address> {
+    fun update() : PublishSubject<Address> {
         fusedLocationProviderClient.requestLocationUpdates(
             locationRequest,
             locationCallback,
@@ -52,9 +47,8 @@ class GeographyInfo(val context: Context) {
                 val addr: List<Address> =
                     gCoder.getFromLocation(location.latitude, location.longitude, 1)
 
-                single = Single.create{emitter->
-                    emitter.onSuccess(addr[0])
-                }
+                single.onNext(addr[0])
+                single.onComplete()
             }
         }
     }

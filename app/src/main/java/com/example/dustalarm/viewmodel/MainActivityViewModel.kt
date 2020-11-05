@@ -26,19 +26,21 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
         disposable.add(
             geographyInfo.update().observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doOnSubscribe{
+                .doOnSubscribe {
                     isLoadingCompleted.value = false
                 }
-                .flatMap {
+                .doOnComplete{
+                    isLoadingCompleted.value=true
+                }
+                .concatMapSingle{
                     address.value = "${it.adminArea ?: ""} ${it.locality ?: ""} " + "${it.subLocality ?: ""} ${it.thoroughfare ?: ""}"
                     dustAPI.receiveTMLocation(umdName= "혜화동")
-                }.flatMap {
+                }.concatMapSingle {
                     dustAPI.receiveStationName(tmX = it.tmX, tmY = it.tmY)
-                }.flatMap {
+                }.concatMapSingle {
                     dustAPI.receivePm(stationNmae = it.name)
                 }.subscribe({
                     dustInfo.value = dust.getInfo(it)
-                    isLoadingCompleted.value=true
                 },{})
         )
 

@@ -3,17 +3,15 @@ package com.example.dustalarm.model
 import android.graphics.Color
 import com.example.dustalarm.R
 import com.example.dustalarm.model.DTO.DustDTO
-import org.koin.core.KoinComponent
 
 class Dust {
 
     fun getInfo(pm: ArpltnInforInqireSVCVo) : DustDTO{
 
-
         val pm10State: String
         val pm25State: String
-        val pm10 = pm.pm10Value.toInt()
-        val pm25 =pm.pm25Value.toInt()
+        val pm10 = pm.pm10Value!!.toInt()
+        val pm25 =pm.pm25Value!!.toInt()
         var check10 : Int =0
         var check25 : Int =0
 
@@ -62,7 +60,7 @@ class Dust {
             color = Color.parseColor("#87888a")
         }
 
-        var dustDTO = DustDTO(pm.pm10Value, pm.pm25Value, pm10State,pm25State,resId,color)
+        var dustDTO = DustDTO(pm.pm10Value!!, pm.pm25Value!!, pm10State,pm25State,resId,color)
         return dustDTO
     }
 }

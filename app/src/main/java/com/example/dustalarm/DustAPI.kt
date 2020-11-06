@@ -1,10 +1,7 @@
 package com.example.dustalarm
 
 import android.util.Log
-import com.example.dustalarm.model.Dust
-import com.example.dustalarm.model.PM
-import com.example.dustalarm.model.Station
-import com.example.dustalarm.model.TM
+import com.example.dustalarm.model.*
 import com.example.dustalarm.view.MainActivity
 import io.reactivex.Single
 import okhttp3.OkHttpClient
@@ -29,27 +26,29 @@ interface DustAPI {
 
     @GET("MsrstnInfoInqireSvc/getTMStdrCrdnt")
     fun receiveTMLocation(
-        @Query("ServiceKey", encoded = true) key : String = KEY,
-        @Query("umdName" ) umdName : String,
+        @Query("umdName") umdName : String,
         @Query("pageNo") pageNo: Int = 1,
-        @Query("numOfRows") numOfRows: Int = 10,
-        @Query("_returnType") type: String = "json"
+        @Query("numOfRows") numOfRows: Int = 50,
+        @Query("_returnType") type: String = "json",
+        @Query("ServiceKey", encoded = true) key : String = KEY
     ) : Single<TM>
 
     @GET("MsrstnInfoInqireSvc/getNearbyMsrstnList")
     fun receiveStationName(
-        @Query("ServiceKey", encoded = true) key : String = KEY,
-        @Query("tmX") tmX : String,
-        @Query("tmY") tmY : String,
-        @Query("_returnType") type: String = "json"
-    ) : Single<TM>
+        @Query("tmX") tmX : String ="",
+        @Query("tmY") tmY : String ="",
+        @Query("pageNo") pageNo: Int = 1,
+        @Query("numOfRows") numOfRows: Int = 1,
+        @Query("_returnType") type: String = "json",
+        @Query("ServiceKey", encoded = true) key : String = KEY
+    ) : Single<Station>
 
     @GET("ArpltnInforInqireSvc/getMsrstnAcctoRltmMesureDnsty")
     fun receivePm(
         @Query("ServiceKey", encoded = true) key : String = KEY,
-        @Query("stationName") stationNmae : String,
+        @Query("stationName", encoded = true) stationNmae : String,
         @Query("pageNo") pageNo: Int = 1,
-        @Query("numOfRows") numOfRows: Int = 10,
+        @Query("numOfRows") numOfRows: Int = 1,
         @Query("_returnType") type: String = "json",
         @Query("dataTerm") dataTerm : String = "daily",
         @Query("ver") ver : String = "1.3"

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.dustalarm.DustAPI
+import com.example.dustalarm.DustNotiAlarm
 import com.example.dustalarm.R
 import com.example.dustalarm.databinding.ActivityMainBinding
 import com.example.dustalarm.viewmodel.MainActivityViewModel
@@ -33,6 +34,9 @@ class MainActivity : AppCompatActivity() {
         )
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
+        viewModel.loadDust();
+
+//        DustNotiAlarm(applicationContext).regist()
 
         viewModel.isLoadingCompleted.observe(this, Observer {
                 if(it!!){

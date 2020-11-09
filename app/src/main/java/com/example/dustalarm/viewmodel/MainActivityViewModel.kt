@@ -25,9 +25,9 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
 
     val address: MutableLiveData<String> = MutableLiveData()
     val isLoadingCompleted: MutableLiveData<Boolean> = MutableLiveData()
-    var addressValue: Addr = Addr()
+    lateinit var addressValue: Addr
 
-    init {
+    fun loadDust() {
         disposable.add(
             geographyInfo.update()
                 .observeOn(AndroidSchedulers.mainThread())
@@ -40,7 +40,8 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
                 }
                 .flatMap {
                     address.value =
-                        "${it.adminArea ?: ""} ${it.subLocality ?: ""} " + "${it.locality ?: ""} ${it.thoroughfare ?: ""}"
+                        "${it.adminArea ?: ""} ${it.subLocality ?: ""}" + "${it.locality ?: ""} ${it.thoroughfare ?: ""}"
+                    addressValue = Addr(it.adminArea, it.locality, it.subLocality, it.thoroughfare)
                     dustAPI.receiveTMLocation(umdName = it.thoroughfare)
                         .subscribeOn(Schedulers.io())
                 }
@@ -48,14 +49,16 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
                     var tmp: MsrstnInfoInqireSvrVo? = null
                     val addr = addressValue
                     it.list.forEach {
-                        if (it.umdName.equals(addr!!.thoroughfare) && it.sidoName.equals(addr.adminArea)) {
+                        if (it.umdName.equals(addr.thoroughfare) && it.sidoName.equals(addr.adminArea)) {
                             tmp = it
                         }
                     }
+                    Log.d("TM", tmp!!.tmX)
                     dustAPI.receiveStationName(tmX = tmp!!.tmX, tmY = tmp!!.tmY)
                         .subscribeOn(Schedulers.io())
                 }
                 .flatMap {
+                    Log.d("Station", it.list[0].stationName)
                     dustAPI.receivePm(stationNmae = it.list[0].stationName)
                         .subscribeOn(Schedulers.io())
                 }
@@ -63,12 +66,13 @@ class MainActivityViewModel : ViewModel(), KoinComponent {
                     dustInfo.postValue(dust.getInfo(it.list[0]))
                     isLoadingCompleted.postValue(true)
                 }, {})
-        )
 
+        )
     }
 
     override fun onCleared() {
         super.onCleared()
         disposable.clear()
     }
+
 }

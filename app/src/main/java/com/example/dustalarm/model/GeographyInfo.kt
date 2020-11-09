@@ -27,7 +27,6 @@ class GeographyInfo(val context: Context) {
     @SuppressLint("MissingPermission")
     fun update(): Single<Address> =
         Single.create { emitter ->
-            Log.d("위치", "start single")
             fusedLocationProviderClient.requestLocationUpdates(
                locationRequest,
                  object : LocationCallback() {
@@ -37,8 +36,8 @@ class GeographyInfo(val context: Context) {
                         val addr: List<Address> =
                             gCoder.getFromLocation(location.latitude, location.longitude, 1)
 
-                        Log.d("위치", addr[0].toString())
                         emitter.onSuccess(addr[0])
+                        fusedLocationProviderClient.removeLocationUpdates(this)
                     }
                 },
                 Looper.myLooper()

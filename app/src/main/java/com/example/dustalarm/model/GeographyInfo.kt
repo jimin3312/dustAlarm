@@ -1,10 +1,14 @@
 package com.example.dustalarm.model
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.location.Address
 import android.location.Geocoder
+import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import com.google.android.gms.location.*
+import io.reactivex.Single
 import io.reactivex.subjects.PublishSubject
 import java.util.*
 
@@ -17,20 +21,29 @@ class GeographyInfo(val context: Context) {
 
     init {
         buildLocationRequest()
-        buildLocationCallback()
-
+//        buildLocationCallback()
     }
-    fun update() : PublishSubject<Address> {
-        fusedLocationProviderClient.requestLocationUpdates(
-            locationRequest,
-            locationCallback,
-            Looper.myLooper()
-        )
 
-//        fusedLocationProviderClient.remove
-        return single
-        //return obaservable
-    }
+    @SuppressLint("MissingPermission")
+    fun update(): Single<Address> =
+        Single.create { emitter ->
+            Log.d("위치", "start single")
+            fusedLocationProviderClient.requestLocationUpdates(
+               locationRequest,
+                 object : LocationCallback() {
+                    override fun onLocationResult(p0: LocationResult?) {
+                        val location = p0!!.locations[p0.locations.size - 1]
+                        val gCoder = Geocoder(context, Locale.getDefault())
+                        val addr: List<Address> =
+                            gCoder.getFromLocation(location.latitude, location.longitude, 1)
+
+                        Log.d("위치", addr[0].toString())
+                        emitter.onSuccess(addr[0])
+                    }
+                },
+                Looper.myLooper()
+            )
+        }
 
     private fun buildLocationRequest() {
         locationRequest = LocationRequest()

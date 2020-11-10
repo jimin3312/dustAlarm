@@ -36,7 +36,7 @@ class MainActivity : AppCompatActivity() {
         binding.viewModel = viewModel
         viewModel.loadDust();
 
-//        DustNotiAlarm(applicationContext).regist()
+        DustNotiAlarm(applicationContext).regist()
 
         viewModel.isLoadingCompleted.observe(this, Observer {
                 if(it!!){

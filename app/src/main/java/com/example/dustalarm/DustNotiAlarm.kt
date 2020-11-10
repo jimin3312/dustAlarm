@@ -4,6 +4,7 @@ import android.app.AlarmManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import java.util.*
 
 class DustNotiAlarm(val context: Context) {
@@ -21,6 +22,8 @@ class DustNotiAlarm(val context: Context) {
             action = "dust.alarm"
         }
         val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+
+        Log.d("알람매니저", "알람매니저")
 
         alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, 1000 * 60, sender)
 

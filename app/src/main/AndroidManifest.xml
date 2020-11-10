@@ -32,15 +32,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-<!--        <receiver android:name=".DustReceiver"-->
-<!--            android:enabled="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action."/>-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
-<!--        <service android:name=".NotiIntentService"-->
-<!--            android:permission="android.permission.BIND_JOB_SERVICE"/>-->
+        <receiver android:name=".DustReceiver"
+            android:enabled="true">
+        </receiver>
     </application>
-
 
 </manifest>

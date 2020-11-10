@@ -7,11 +7,10 @@ import com.example.dustalarm.model.DTO.DustDTO
 class Dust {
 
     fun getInfo(pm: ArpltnInforInqireSVCVo) : DustDTO{
-
         val pm10State: String
         val pm25State: String
-        val pm10 = pm.pm10Value!!.toInt()
-        val pm25 =pm.pm25Value!!.toInt()
+        val pm10 = pm.pm10Value.toInt()
+        val pm25 =pm.pm25Value.toInt()
         var check10 : Int =0
         var check25 : Int =0
 

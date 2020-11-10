@@ -27,10 +27,12 @@ class GeographyInfo(val context: Context) {
     @SuppressLint("MissingPermission")
     fun update(): Single<Address> =
         Single.create { emitter ->
+            Log.d("위치 루퍼1", Looper.myLooper().toString())
             fusedLocationProviderClient.requestLocationUpdates(
                locationRequest,
                  object : LocationCallback() {
                     override fun onLocationResult(p0: LocationResult?) {
+                        Log.d("위치 루퍼2", Looper.myLooper().toString())
                         val location = p0!!.locations[p0.locations.size - 1]
                         val gCoder = Geocoder(context, Locale.getDefault())
                         val addr: List<Address> =

@@ -18,14 +18,18 @@ class DustNotiAlarm(val context: Context) {
             set(Calendar.SECOND, 0)
         }
 
+        if(calendar.timeInMillis < System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_MONTH, 1)
+        }
+
         val intent = Intent(context, DustReceiver::class.java).apply {
             action = "dust.alarm"
         }
-        val sender = PendingIntent.getBroadcast(context, 0, intent, 0)
+        val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_NO_CREATE)
 
-        Log.d("알람매니저", "알람매니저")
-
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, 1000 * 60, sender)
-
+        if(pendingIntent == null){
+            val sender =  PendingIntent.getBroadcast(context, 0, intent, 0)
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, AlarmManager.INTERVAL_DAY, sender)
+        }
     }
 }

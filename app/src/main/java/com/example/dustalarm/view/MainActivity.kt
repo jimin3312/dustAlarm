@@ -1,7 +1,10 @@
 package com.example.dustalarm.view
 
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.Observable
 import androidx.lifecycle.MutableLiveData
@@ -34,9 +37,8 @@ class MainActivity : AppCompatActivity() {
         )
         binding.lifecycleOwner = this
         binding.viewModel = viewModel
-        viewModel.loadDust();
 
-        DustNotiAlarm(applicationContext).regist()
+        getPermission()
 
         viewModel.isLoadingCompleted.observe(this, Observer {
                 if(it!!){
@@ -46,6 +48,43 @@ class MainActivity : AppCompatActivity() {
                     loadingDialog.startLoading()
                 }
         })
+    }
 
+    private fun getPermission(){
+        if (ActivityCompat.checkSelfPermission(this, android.Manifest.permission.ACCESS_FINE_LOCATION)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION,
+                    android.Manifest.permission.ACCESS_BACKGROUND_LOCATION),
+                REQUEST_CODE
+            )
+        }
+        else
+            getDust()
+    }
+
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            REQUEST_CODE -> {
+                if (grantResults.isNotEmpty()) {
+                    if (grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                        getDust()
+                    else
+                        finish()
+                }
+            }
+        }
+    }
+
+    private fun getDust() {
+        viewModel.loadDust()
+        DustNotiAlarm(applicationContext).regist()
     }
 }
